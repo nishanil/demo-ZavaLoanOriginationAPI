@@ -1,28 +1,58 @@
 # ZavaLoanOriginationAPI
 
-> Part of the [Zava Bank](https://github.com/bradygaster/Build2026GHCPAppModDemoWare) multi-service banking platform.
-
-Loan application processing API — backend for loan underwriting decisions.
+Backend API service for Zava Bank's loan origination workflow — handles loan application submission, underwriting orchestration, and status tracking.
 
 ## Tech Stack
 
-Java / Spring Boot
+- **Language:** Java
+- **Build Tool:** Gradle
+- **Runtime:** Servlet-based (WAR deployment)
+- **Containerization:** Docker
+
+## Features
+
+- Loan application submission endpoint
+- Underwriting orchestration with external service integration
+- Loan status retrieval
+- Health check endpoint
+- Configurable connection settings for downstream services
 
 ## Getting Started
 
-This service is designed to run as part of the full Zava Bank platform. To run all services together:
+### Prerequisites
+
+- Java 17+
+- Gradle 8.9+
+- Docker (for containerized deployment)
+
+### Build
 
 ```bash
-# Clone the main orchestration repo (includes all services as submodules)
-git clone --recurse-submodules https://github.com/bradygaster/Build2026GHCPAppModDemoWare.git
-cd Build2026GHCPAppModDemoWare
-
-# Start all services
-docker compose up
+./gradlew build
 ```
 
-## Main Repository
+### Run with Docker
 
-For full architecture documentation, port mappings, and instructions:
+```bash
+docker build -t zava-loan-origination-api .
+docker run -p 8080:8080 zava-loan-origination-api
+```
 
-**[bradygaster/Build2026GHCPAppModDemoWare](https://github.com/bradygaster/Build2026GHCPAppModDemoWare)**
+## Project Structure
+
+```
+├── src/main/java/com/zavabank/loanorigination/
+│   ├── LoanApplyServlet.java        # Loan application endpoint
+│   ├── LoanStatusServlet.java       # Status query endpoint
+│   ├── LoanBootstrapServlet.java    # Service initialization
+│   ├── LoanConnectionFactory.java   # Connection management
+│   ├── LoanOriginationConfig.java   # Configuration
+│   └── HealthServlet.java           # Health check
+├── src/main/resources/
+│   └── loan-origination.properties  # Service configuration
+├── src/main/webapp/
+│   └── WEB-INF/web.xml              # Servlet mappings
+├── build.gradle                     # Build configuration
+├── settings.gradle                  # Gradle settings
+└── Dockerfile                       # Container definition
+```
