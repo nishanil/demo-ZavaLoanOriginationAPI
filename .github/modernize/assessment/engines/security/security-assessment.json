@@ -1,0 +1,132 @@
+{
+  "GeneratedAt": "2026-06-15T19:55:00.0000000Z",
+  "ProjectPath": ".",
+  "Summary": {
+    "TotalFindings": 9,
+    "CveCount": 3,
+    "CweCount": 6,
+    "BySeverity": {
+      "mandatory": 3,
+      "optional": 3,
+      "potential": 3
+    },
+    "ByCategory": {
+      "CVE": 3,
+      "Code Quality": 3,
+      "Credentials & Secrets": 3
+    },
+    "TotalRulesAssessed": 59,
+    "RulesPassed": 53
+  },
+  "CveFindings": [
+    {
+      "Id": "CVE-2025-59250",
+      "Name": "JDBC Driver for SQL Server has improper input validation issue",
+      "Category": "CVE",
+      "Severity": "mandatory",
+      "StoryPoint": 1,
+      "Description": "Improper input validation in the Microsoft JDBC Driver for SQL Server allows an unauthorized attacker to perform spoofing over a network.",
+      "Files": ["build.gradle:16"],
+      "Explanation": "[CVE-2025-59250](https://github.com/advisories/GHSA-m494-w24q-6f7w): JDBC Driver for SQL Server has improper input validation issue\n\nSeverity: HIGH (CVSS 8.1)\n\nImproper input validation in the Microsoft JDBC Driver for SQL Server allows an unauthorized attacker to perform spoofing over a network.\n\nAffected dependencies:\n  - com.microsoft.sqlserver:mssql-jdbc:12.6.3.jre11 (declared at build.gradle:16)\n    Vulnerable range: >= 12.6.0.jre11, < 12.6.5.jre11\n\nRecommended fix:\n  - Upgrade com.microsoft.sqlserver:mssql-jdbc to 12.6.5.jre11 or later"
+    },
+    {
+      "Id": "CVE-2023-5072",
+      "Name": "Java: DoS Vulnerability in JSON-JAVA",
+      "Category": "CVE",
+      "Severity": "mandatory",
+      "StoryPoint": 1,
+      "Description": "A bug in the JSON-Java parser means that an input string of modest size can lead to indefinite amounts of memory being used, causing an OutOfMemoryError. Nested JSON objects can cause exponential memory consumption.",
+      "Files": ["build.gradle:17"],
+      "Explanation": "[CVE-2023-5072](https://github.com/advisories/GHSA-4jq9-2xhw-jpx7): Denial of Service vulnerability in JSON-Java\n\nSeverity: HIGH (CVSS 7.5)\n\nA bug in the JSON-Java parser means that an input string of modest size can lead to indefinite amounts of memory being used, causing an OutOfMemoryError. Nested JSON objects can cause exponential memory consumption.\n\nAffected dependencies:\n  - org.json:json:20140107 (declared at build.gradle:17)\n    Vulnerable range: <= 20230618\n\nRecommended fix:\n  - Upgrade org.json:json to 20231013 or later"
+    },
+    {
+      "Id": "CVE-2022-45688",
+      "Name": "json stack overflow vulnerability",
+      "Category": "CVE",
+      "Severity": "mandatory",
+      "StoryPoint": 1,
+      "Description": "A stack overflow in org.json:json before version 20230227 allows attackers to cause a Denial of Service (DoS) via crafted JSON or XML data.",
+      "Files": ["build.gradle:17"],
+      "Explanation": "[CVE-2022-45688](https://github.com/advisories/GHSA-3vqj-43w4-2q58): Stack overflow in XML.toJSONObject component\n\nSeverity: HIGH (CVSS 7.5)\n\nA stack overflow in org.json:json before version 20230227 allows attackers to cause a Denial of Service (DoS) via crafted JSON or XML data.\n\nAffected dependencies:\n  - org.json:json:20140107 (declared at build.gradle:17)\n    Vulnerable range: < 20230227\n\nRecommended fix:\n  - Upgrade org.json:json to 20230227 or later (20231013 or later is recommended to also fix CVE-2023-5072)"
+    }
+  ],
+  "CweFindings": [
+    {
+      "Id": "CWE-259",
+      "Name": "Use of Hard-coded Password",
+      "Category": "Credentials & Secrets",
+      "Severity": "optional",
+      "StoryPoint": 5,
+      "Description": "The product contains a hard-coded password, which it uses for its own inbound authentication or for outbound communication to external components.",
+      "Files": [
+        "src/main/resources/loan-origination.properties",
+        "Dockerfile"
+      ],
+      "Explanation": "The database password 'YourStrong!Passw0rd' is hard-coded in two places: (1) loan-origination.properties line 5 as 'db.password', and (2) Dockerfile line 11 as 'ENV DB_PASSWORD=YourStrong!Passw0rd', embedding the credential directly into the container image at build time."
+    },
+    {
+      "Id": "CWE-477",
+      "Name": "Use of Obsolete Function",
+      "Category": "Code Quality",
+      "Severity": "optional",
+      "StoryPoint": 1,
+      "Description": "The code uses deprecated or obsolete functions, which suggests that the code has not been actively reviewed or maintained.",
+      "Files": [
+        "src/main/java/com/zavabank/loanorigination/LoanConnectionFactory.java"
+      ],
+      "Explanation": "LoanConnectionFactory uses Class.forName(\"com.microsoft.sqlserver.jdbc.SQLServerDriver\") at line 10 to manually register the JDBC driver. Since JDBC 4.0 (Java 6+), drivers are automatically loaded via the ServiceLoader mechanism, making explicit Class.forName() driver registration obsolete."
+    },
+    {
+      "Id": "CWE-681",
+      "Name": "Incorrect Conversion between Numeric Types",
+      "Category": "Code Quality",
+      "Severity": "potential",
+      "StoryPoint": 3,
+      "Description": "When converting from one data type to another, such as long to integer, data can be omitted or translated in a way that produces unexpected values. If the resulting values are used in a sensitive context, then dangerous behaviors may occur.",
+      "Files": [
+        "src/main/java/com/zavabank/loanorigination/LoanApplyServlet.java"
+      ],
+      "Explanation": "In LoanApplyServlet.doPost() at line 37, a BigDecimal is created directly from a double: new BigDecimal(payload.optDouble(\"requestedAmount\", 0d)). The BigDecimal(double) constructor preserves the exact binary floating-point representation, producing unexpected precision for financial amounts."
+    },
+    {
+      "Id": "CWE-778",
+      "Name": "Insufficient Logging",
+      "Category": "Credentials & Secrets",
+      "Severity": "potential",
+      "StoryPoint": 3,
+      "Description": "When a security-critical event occurs, the product either does not record the event or omits important details about the event when logging it.",
+      "Files": [
+        "src/main/java/com/zavabank/loanorigination/LoanApplyServlet.java",
+        "src/main/java/com/zavabank/loanorigination/LoanStatusServlet.java"
+      ],
+      "Explanation": "The application contains no logging framework (no SLF4J, Log4j, java.util.logging, or System.out statements). Security-critical events such as loan application submissions, loan decisions, service call failures (caught and silently swallowed in callJsonApi), and database errors are not logged, preventing audit trails and incident detection."
+    },
+    {
+      "Id": "CWE-798",
+      "Name": "Use of Hard-coded Credentials",
+      "Category": "Credentials & Secrets",
+      "Severity": "optional",
+      "StoryPoint": 5,
+      "Description": "The product contains hard-coded credentials, such as a password or cryptographic key.",
+      "Files": [
+        "src/main/resources/loan-origination.properties",
+        "Dockerfile"
+      ],
+      "Explanation": "Hard-coded credentials appear in multiple locations: (1) loan-origination.properties line 5 ('db.password') and line 4 ('db.user=sa' — the SQL Server system administrator account), (2) Dockerfile lines 10-11 ('ENV DB_USER=sa' and 'ENV DB_PASSWORD=YourStrong!Passw0rd') which bake the credentials into the container image. Using the SA account with a hard-coded password presents a critical security risk."
+    },
+    {
+      "Id": "CWE-1057",
+      "Name": "Data Access Operations Outside of Expected Data Manager Component",
+      "Category": "Code Quality",
+      "Severity": "potential",
+      "StoryPoint": 5,
+      "Description": "The product uses a dedicated, central data manager component as required by design, but it contains code that performs data-access operations that do not use this data manager.",
+      "Files": [
+        "src/main/java/com/zavabank/loanorigination/LoanApplyServlet.java",
+        "src/main/java/com/zavabank/loanorigination/LoanStatusServlet.java",
+        "src/main/java/com/zavabank/loanorigination/LoanBootstrapServlet.java"
+      ],
+      "Explanation": "JDBC data-access operations (INSERT, UPDATE, SELECT, CREATE TABLE) are performed directly inside servlet classes (LoanApplyServlet.insertApplication/updateApplication/insertDecision, LoanStatusServlet.doGet, LoanBootstrapServlet.init) rather than in a dedicated data manager or repository component."
+    }
+  ]
+}
